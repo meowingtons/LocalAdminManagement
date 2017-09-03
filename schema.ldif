@@ -11,9 +11,28 @@ isSingleValued: FALSE
 oMSyntax: 20
 searchFlags: 1
 isMemberOfPartialAttributeSet: TRUE
+-
 
 dn:
 changetype: modify
 replace: schemaupdatenow
 schemaupdatenow: 1
 -
+
+dn: CN=lamCurrentAdmins,CN=Schema,CN=Configuration,DC=x
+changetype: add
+objectClass: computer
+objectClass: attributeSchema
+cn: lamConfiguredAdmins
+attributeID: 1.2.840.113556.1.6.29.2.1.14
+attributeSyntax: 2.5.5.4
+isSingleValued: FALSE
+oMSyntax: 20
+searchFlags: 1
+isMemberOfPartialAttributeSet: TRUE
+-
+
+dn:
+changetype: modify
+replace: schemaupdatenow
+schemaupdatenow: 1
