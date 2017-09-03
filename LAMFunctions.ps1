@@ -10,6 +10,7 @@ function Get-LocalAdminManagedStatus
     }
 }
 
+#here's a change
 function Get-MachineAdminMembership 
 {
     $WellKnownSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
