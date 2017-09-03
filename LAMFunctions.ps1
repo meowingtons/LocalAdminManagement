@@ -34,7 +34,16 @@ function Get-MachineAdminMembership
     Return $LocalAdminDetails
 }
 
-function  Get-ConfiguredAdminMembership
+function  Get-DomainInfo
 {
+    $ComputerSystem = Get-WmiObject win32_computersystem
     
+    If ($ComputerSystem.PartofDomain -eq $true)
+    {
+        $Global:DomainName = $ComputerSystem.Domain
+    }
+    Else 
+    {
+        Throw "Machine is not part of domain. Get wrekt."
+    }
 }
