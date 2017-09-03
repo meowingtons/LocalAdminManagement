@@ -1,4 +1,4 @@
-function Get-LocalAdminManagedStatus
+function Get-AdminManagedStatus
 {
 
     $GroupManagedStatus = (Get-ItemProperty -Path HKLM:\SOFTWARE\LAM).GroupManagedStatus
@@ -45,5 +45,22 @@ function  Get-DomainInfo
     Else 
     {
         Throw "Machine is not part of domain. Get wrekt."
+    }
+}
+
+function Get-ConfiguredAdmins
+{
+    $Searcher = [adsisearcher]''
+    $Searcher.PropertiesToLoad.Add('lamConfiguredAdmins')
+    $Searcher.Filter = "(&(objectCategory=Computer)(samAccountName=$env:COMPUTERNAME))"
+
+    $SearchResults = $Searcher.FindAll()
+
+    if ($SearchResults -gt 1)
+    {
+        throw "More than one object found. (WTF did you do?!)"
+    }
+    else {
+        return $SearchResults
     }
 }
