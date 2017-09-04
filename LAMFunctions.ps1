@@ -64,3 +64,10 @@ function Get-ConfiguredAdmins
         return $SearchResults
     }
 }
+
+function Set-MachineLocalAdmins ([Array]$Members)
+{
+    $WellKnownSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
+    $LocalGroup = ($WellKnownSID.Translate([System.Security.Principal.NTAccount])).ToString().Trim("BUILTIN\")
+    $Group = [ADSI]"WinNT://$env:COMPUTERNAME/$LocalGroup,group"
+}
