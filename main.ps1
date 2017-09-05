@@ -8,7 +8,5 @@ function Sync-LocalMachine
     {
         $LocalAdmins = Get-MachineAdminMembership
         $ConfiguredAdmins = Get-ConfiguredAdmins
-
-
     }
 }
