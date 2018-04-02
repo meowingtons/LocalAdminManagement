@@ -1,3 +1,9 @@
+function New-UserClass 
+{
+    $class = "public class User { public string Username { get; set; } public bool DomainAccount { get; set; } }"
+    Add-Type -TypeDefinition $class
+}
+
 function Get-AdminManagedStatus
 {
 
@@ -60,14 +66,39 @@ function Get-ConfiguredAdmins
     {
         throw "More than one object found. (WTF did you do?!)"
     }
-    else {
+    else
+    {
         return $SearchResults
     }
 }
 
-function Set-MachineLocalAdmins ([Array]$Members)
+function Set-MachineLocalAdmins ([User[]]$Members)
 {
     $WellKnownSID = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
     $LocalGroup = ($WellKnownSID.Translate([System.Security.Principal.NTAccount])).ToString().Trim("BUILTIN\")
     $Group = [ADSI]"WinNT://$env:COMPUTERNAME/$LocalGroup,group"
+
+    foreach ($member in $Members) {
+        $computer = Get-WmiObject win32_computersystem
+
+        #check if computer is domain joined
+        if ($computer.DomainRole -eq 0 -or 2) {
+            throw "Computer is not domain joined, cannot set local membership."
+        }
+        else {
+            if ($member.DomainAccount -eq $true) {
+                $memberString = "WinNT://" + $computer.Domain + "/" + $member.Username
+            }
+            else {
+                $memberString = "WinNT://" + $env:COMPUTERNAME + "/" + $member.Username
+            }
+            
+            try {
+                $Group.Add($memberString)
+            }
+            catch {
+                throw "Error Adding Members to Local Administrators"
+            }
+        }
+    }
 }
